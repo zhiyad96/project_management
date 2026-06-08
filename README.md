@@ -1,182 +1,104 @@
+
 # Project Management System
 
-A full-stack project management application with a modern Next.js frontend and a Python FastAPI backend.
+## Architecture
 
-## 📋 Project Structure
+Frontend: Next.js
+Backend: FastAPI
+Database: PostgreSQL
+ORM: SQLAlchemy
+Migrations: Alembic
 
-```
-TechBrein/
-├── frontend/                 # Next.js frontend application
-│   ├── app/                 # Next.js app directory
-│   ├── components/          # React components
-│   ├── context/             # Context API for state management
-│   ├── services/            # API service layer
-│   ├── types/               # TypeScript type definitions
-│   └── package.json
-│
-└── Project_management/      # Python FastAPI backend
-    ├── models/              # SQLAlchemy models
-    ├── routers/             # API route handlers
-    ├── schemas/             # Pydantic schemas
-    ├── service/             # Business logic
-    ├── database/            # Database configuration
-    ├── alembic/             # Database migrations
-    ├── main.py              # FastAPI application entry point
-    └── requirements.txt     # Python dependencies
-```
+Flow:
+Client (Next.js) -> FastAPI API -> SQLAlchemy -> PostgreSQL
 
-## 🚀 Quick Start
+Authentication uses JWT Access Token and Refresh Token stored in HTTP-only cookies.
 
-### Backend Setup (Python FastAPI)
+## ER Diagram
 
-1. **Navigate to backend directory:**
-   ```bash
-   cd Project_management
-   ```
+Users
+- id (PK)
+- name
+- email
+- password
+- role
 
-2. **Create and activate virtual environment:**
-   ```bash
-   python -m venv venv
-   # On Windows:
-   venv\Scripts\activate
-   # On macOS/Linux:
-   source venv/bin/activate
-   ```
+Projects
+- id (PK)
+- name
+- description
+- created_by (FK -> users.id)
 
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+Tasks
+- id (PK)
+- title
+- description
+- status
+- project_id (FK -> projects.id)
+- assigned_to (FK -> users.id)
+- due_date
 
-4. **Set up environment variables:**
-   ```bash
-   # Create .env file with your database and settings
-   ```
+Relationships:
+- One User creates many Projects
+- One Project contains many Tasks
+- One User can be assigned many Tasks
 
-5. **Run database migrations:**
-   ```bash
-   alembic upgrade head
-   ```
-
-6. **Start the backend server:**
-   ```bash
-   python main.py
-   # or
-   uvicorn main:app --reload
-   ```
-
-   Backend will be available at `http://localhost:8000`
-   API documentation at `http://localhost:8000/docs`
-
-### Frontend Setup (Next.js)
-
-1. **Navigate to frontend directory:**
-   ```bash
-   cd frontend/project_managment
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables:**
-   ```bash
-   # Create .env.local with your API endpoints
-   NEXT_PUBLIC_API_URL=http://localhost:8000
-   ```
-
-4. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
-
-   Frontend will be available at `http://localhost:3000`
-
-## 🏗️ Architecture
+## Setup Steps
 
 ### Backend
-- **Framework:** FastAPI
-- **Database:** SQLAlchemy ORM with Alembic migrations
-- **Authentication:** JWT-based auth service
-- **API Structure:**
-  - `routers/auth.py` - Authentication endpoints
-  - `routers/users.py` - User management
-  - `routers/project.py` - Project management
-  - `routers/task.py` - Task management
+
+1. Create virtual environment
+   python -m venv venv
+
+2. Activate environment
+
+3. Install dependencies
+   pip install -r requirements.txt
+
+4. Configure .env
+
+5. Run migrations
+   alembic upgrade head
+
+6. Start server
+   uvicorn main:app --reload
 
 ### Frontend
-- **Framework:** Next.js with TypeScript
-- **UI Components:** React components for different roles (Admin, Developer)
-- **State Management:** React Context API
-- **Pages:**
-  - `/login` - Login page
-  - `/admin` - Admin dashboard
-  - `/developer` - Developer dashboard
-  - Protected routes for authenticated users
 
-## 👥 User Roles
+1. Install packages
+   npm install
 
-- **Admin:** Full system access, user and project management
-- **Developer:** Can view assigned projects and tasks
+2. Run frontend
+   npm run dev
 
-## 🔧 Key Features
+## API Documentation
 
-- User authentication and authorization
-- Project creation and management
-- Task assignment and tracking
-- Role-based access control
-- Admin dashboard
-- Developer dashboard
+### Auth
+POST /auth/login
+GET /auth/me
+POST /auth/refresh
+POST /auth/logout
 
-## 📦 Technology Stack
+### Users
+POST /users/
+GET /users/
+GET /users/{id}
+PATCH /users/{id}
+DELETE /users/{id}
 
-**Backend:**
-- Python 3.11+
-- FastAPI
-- SQLAlchemy
-- PostgreSQL (or your configured database)
-- Alembic for migrations
+### Projects
+POST /projects/
+GET /projects
+GET /projects/{id}
+PUT /projects/{id}
+DELETE /projects/{id}
 
-**Frontend:**
-- Next.js 14+
-- React 18+
-- TypeScript
-- TailwindCSS
+### Tasks
+POST /tasks/
+GET /tasks
+GET /tasks/{id}
+GET /tasks/project/{project_id}
+PUT /tasks/{id}
+DELETE /tasks/{id}
 
-## 🔐 Environment Variables
 
-### Backend (.env)
-```
-DATABASE_URL=postgresql://user:password@localhost/project_management
-SECRET_KEY=your-secret-key-here
-ALGORITHM=HS256
-```
-
-### Frontend (.env.local)
-```
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
-
-## 📝 API Documentation
-
-Once the backend is running, visit `http://localhost:8000/docs` for interactive Swagger API documentation.
-
-## 🚢 Deployment
-
-Instructions for deploying to production environments (Docker, cloud platforms) can be added here.
-
-## 🤝 Contributing
-
-1. Create a feature branch (`git checkout -b feature/amazing-feature`)
-2. Commit your changes (`git commit -m 'Add amazing feature'`)
-3. Push to the branch (`git push origin feature/amazing-feature`)
-4. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 👨‍💻 Author
-
-**Zhiyad** - Project Developer
